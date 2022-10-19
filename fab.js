@@ -26,9 +26,9 @@ function main () {
     const grammarName = argv._[1];
     const grammarfilename = argv._[2];
     const fmtfilename = argv._[3];
-    var src = fs.readFileSync (srcfilenamecname, 'utf-8');
-    var grammar = fs.readFileSync (grammarfilenamecname, 'utf-8');
-    var fmt = fs.readFileSync (fmtfilenamecname, 'utf-8');
+    var src = fs.readFileSync (srcfilenamename, 'utf-8');
+    var grammar = fs.readFileSync (grammarfilenamename, 'utf-8');
+    var fmt = fs.readFileSync (fmtfilenamename, 'utf-8');
     const [success, transpiled, errormessage] = tr.transpile (src, grammarName, grammar, fmt, ohm, fmtjs.compilefmt);
     if (success) {
 	emit (transpiled);
