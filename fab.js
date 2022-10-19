@@ -41,3 +41,5 @@ function main () {
 function emit (s) {
     console.log (s);
 }
+
+main ();
