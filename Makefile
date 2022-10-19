@@ -1,7 +1,7 @@
 all: install fab
 
 fab:
-	cat fab-head.js fmt-js/fmt-js.js fmt-js/transpile.js >fab
+	cat fmt-js/fmt-js.js fmt-js/transpile.js fab-head.js >fab
 	chmod a+x fab
 
 install: repos npmstuff
