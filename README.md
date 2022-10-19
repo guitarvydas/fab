@@ -15,7 +15,7 @@ Exit code 0 on success.
 Exit code 1 on failure.  stdout contains error message.
 
 # Usage
-$ fab src grammar fmt
+$ fab srcFilename grammarName grammarFilename fmtFilename
 
 # Build
 make install
