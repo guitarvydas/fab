@@ -29,7 +29,7 @@ function main () {
     var src = fs.readFileSync (srcfilename, 'utf-8');
     var grammar = fs.readFileSync (grammarfilename, 'utf-8');
     var fmt = fs.readFileSync (fmtfilename, 'utf-8');
-    const [success, transpiled, errormessage] = tr.transpile (src, grammarName, grammar, fmt, ohm, fmtjs.compilefmt);
+    const [success, transpiled, errormessage] = transpile (src, grammarName, grammar, fmt, ohm, compilefmt);
     if (success) {
 	emit (transpiled);
 	process.exit (0);
