@@ -1,3 +1,11 @@
+#!/usr/bin/env node
+//'use strict'
+
+
+const fs = require ('fs');
+const ohm = require ('ohm-js');
+// ... require ('./fmt-js/fmt-js.js');
+// ... require ('./fmt-js/transpile.js');
 /// helpers
 function _ruleInit () {
 }
@@ -446,15 +454,6 @@ function getFmtGrammar () {
   function getRuleName () { return ruleName; }
 
 /// end helpers
-
-#!/usr/bin/env node
-//'use strict'
-
-
-const fs = require ('fs');
-const ohm = require ('ohm-js');
-// ... require ('./fmt-js/fmt-js.js');
-// ... require ('./fmt-js/transpile.js');
 
 var argv;
 
