@@ -1,0 +1,9 @@
+*~
+_*
+.DS_Store*
+node_modules/*
+py/__pycache/*
+*.mov
+fmt-js/
+junk.*
+junk*
