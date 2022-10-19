@@ -4,8 +4,8 @@
 
 const fs = require ('fs');
 const ohm = require ('ohm-js');
-const fmtjs = require ('./fmt-js/fmt-js.js');
-const tr = require ('./fmt-js/transpile.js');
+// ... require ('./fmt-js/fmt-js.js');
+// ... require ('./fmt-js/transpile.js');
 
 var argv;
 
