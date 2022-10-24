@@ -459,11 +459,6 @@ var argv;
 
 function main () {
     argv = require('yargs/yargs')(process.argv.slice(2)).argv;
-    if (argv.view) {
-	viewGeneratedCode = true;
-    } else {
-	viewGeneratedCode = false;
-    }
     if (argv.trace) {
 	tracing = true;
 	traceDepth = 0;
