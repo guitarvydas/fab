@@ -13,14 +13,17 @@ function main () {
     } else {
 	tracing = false;
     }
-    const srcfilename = argv._[0];
-    const grammarName = argv._[1];
-    const grammarfilename = argv._[2];
-    const fmtfilename = argv._[3];
+    var srcfilename = argv._[0];
+    var grammarName = argv._[1];
+    var grammarfilename = argv._[2];
+    var fmtfilename = argv._[3];
     var src = fs.readFileSync (srcfilename, 'utf-8');
     var grammar = fs.readFileSync (grammarfilename, 'utf-8');
     var fmt = fs.readFileSync (fmtfilename, 'utf-8');
-    const [success, transpiled, errormessage] = transpile (src, grammarName, grammar, fmt, ohm, compilefmt);
+    var r = transpile (src, grammarName, grammar, fmt, ohm, compilefmt);
+    var success = r [0]
+    var transpiled = r [1]
+    var errormessage = r [2]
     if (success) {
 	emit (transpiled);
 	process.exit (0);
