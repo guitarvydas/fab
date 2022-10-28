@@ -491,6 +491,9 @@ function main () {
 	tracing = false;
     }
     var srcfilename = argv._[0];
+    if (srcfilename === '-') {
+	srcfilename = '/dev/fd/0';
+    }
     var grammarName = argv._[1];
     var grammarfilename = argv._[2];
     var fmtfilename = argv._[3];
