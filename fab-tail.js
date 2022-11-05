@@ -23,7 +23,11 @@ function main () {
     var src = fs.readFileSync (srcfilename, 'utf-8');
     var grammar = fs.readFileSync (grammarfilename, 'utf-8');
     var fmt = fs.readFileSync (fmtfilename, 'utf-8');
-    var r = transpile (src, grammarName, grammar, fmt, ohm, compilefmt);
+    if (argv.support) {
+	var r = transpile (src, grammarName, grammar, fmt, ohm, compilefmt, argv.support);
+    } else {
+	var r = transpile (src, grammarName, grammar, fmt, ohm, compilefmt, undefined);
+    }
     var success = r [0]
     var transpiled = r [1]
     var errormessage = r [2]
