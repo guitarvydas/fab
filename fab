@@ -109,7 +109,8 @@ RuleLHS = name "[" Param+ "]"
 rewriteString = "‛" char* "’" spaces
 char =
   | "«" nonBracketChar* "»" -- eval
-  | ~"’" ~"]]" any     -- raw
+  | (escquote | (~"’" ~"]]" any))     -- raw
+escquote = "\\" ("‛" | "’")
 nonBracketChar = ~"»" ~"«"  ~"’" ~"]]" any
 name = letter nameRest*
 nameRest = "_" | alnum
@@ -270,6 +271,14 @@ _ruleExit ("${getRuleName ()}");
         var c = _c._fmt ();
         var _result = `${c}`; 
         _ruleExit ("char_raw");
+        return _result; 
+    },
+    escquote : function (_slash, _c) { 
+        _ruleEnter ("escquote");
+
+        var c = _c._fmt ();
+        var _result = `${c}`; 
+        _ruleExit ("escquote");
         return _result; 
     },
     ////
