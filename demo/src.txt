@@ -1,0 +1,9 @@
+❖ Show prolog_bg at 0x-550. Move prolog_bg to 0x0
+over 300 frames. Wait 150 frames.
+
+		    CHEL:NA
+	  The last time I saw
+	  her... She was smiling. As
+
+❖ Fade to black over 43 frames. Jump INTRO.
+
