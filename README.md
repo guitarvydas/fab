@@ -6,8 +6,9 @@ Uses ./fmt-js to create a transpiler/
 
 Creates a node.js script called "fab".
 
-
 Transpiled file is console.logged to stdout.
+
+See doc/documentation.
 
 # Exit Code
 Exit code 0 on success.
