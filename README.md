@@ -1,27 +1,29 @@
-FABricate code from source file.
+FABricate new text from input source text.
 
-Command-line utility to transpile source file and apply fabrication rules to generate new source.
+Command-line utility to transpile input source text and apply fabrication rules to generate new text.
 
-Uses ./fmt-js to create a transpiler/
-
-Creates a node.js script called "fab".
-
-Transpiled file is console.logged to stdout.
+![[fab.png]]
 
 See doc/documentation.
 
 # Exit Code
-Exit code 0 on success.
+Exit code 0 on success. `stdout` contains new text.
 
-Exit code 1 on failure.  stdout contains error message.
+Exit code 1 on failure.  `stdout` contains error messages on failure.
 
 # Usage
+```
 $ fab srcFilename grammarName grammarFilename fmtFilename
+```
+or
+```
+$ fab - grammarName grammarFilename fmtFilename <srcText
+```
 
 # Build
 make install
 make
 
 # Test
-see ../fabghoststars and build it
+see other repos `fabghoststars`, `parsingexplorer`, `fabx`
 
