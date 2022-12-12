@@ -78,9 +78,10 @@ function compilefmt (fmtsrc, ohmlang) {
     var fmtcst = internalgrammar.match (fmtsrc);
 
     if (fmtcst.failed ()) {
+	console.error (internalgrammar);
 	let len = fmtcst.getRightmostFailurePosition();
-        let emsg = "FORMAT: syntax error in fabrication specification\nrightmostPosition=" + len + '\n';
-        return [false, emsg];
+        //return [false, "FORMAT: syntax error in fabrication specification\nrightmostPosition=" + len + '\n' + fmtsrc.substring (0, len)];
+        return [false, "FORMAT: syntax error in fabrication specification\nrightmostPosition=" + len + '\n'];
     }
     // Step 1b. Transpile User's FMT spec to a JS object (for use with Ohm-JS)
     try {
@@ -105,16 +106,14 @@ FMT {
 top = spaces name spaces "{" spaces rule+ spaces "}" spaces more*
 more = name spaces "{" spaces rule* spaces "}" spaces
 rule = applySyntactic<RuleLHS> spaces "=" spaces rewriteString
-RuleLHS = name "[" Param* "]"
+RuleLHS = name "[" Param+ "]"
 rewriteString = "‛" char* "’" spaces
 char =
   | "«" nonBracketChar* "»" -- eval
-  | "\\" "n" -- newline
   | "\\" any -- esc
   | ~"’" ~"]]" any     -- raw
 nonBracketChar = ~"»" ~"«"  ~"’" ~"]]" any
-name = nameFirst nameRest*
-nameFirst = "_" | letter
+name = letter nameRest*
 nameRest = "_" | alnum
 Param =
   | name "+" -- plus
@@ -268,15 +267,6 @@ return ${rws}
         return _result; 
     },
     
-    char_newline : function (_slash, _c) { 
-        _ruleEnter ("char_newline");
-
-        var slash = _slash._fmt ();
-        var c = _c._fmt ();
-        var _result = `\n`; 
-        _ruleExit ("char_newline");
-        return _result; 
-    },
     char_esc : function (_slash, _c) { 
         _ruleEnter ("char_esc");
 
@@ -309,15 +299,6 @@ return ${rws}
         return _result; 
     },
     
-    nameFirst : function (_c) { 
-        _ruleEnter ("nameFirst");
-
-        var c = _c._fmt ();
-        var _result = `${c}`; 
-        _ruleExit ("nameFirst");
-        return _result; 
-    },
-
     nameRest : function (_c) { 
         _ruleEnter ("nameRest");
 
@@ -410,8 +391,8 @@ function transpile (src, grammarName, grammars, fmt, ohmlang, compfmt, supportfn
 	try {
 	    semobj = eval (evalableSemanticsFunctions);
 	} catch (err) {
-	    //console.error (evalableSemanticsFunctions);
-	    //console.error (fmt);
+	    console.error (evalableSemanticsFunctions);
+	    console.error (fmt);
 	    return [false, null, 'error evaling .fmt specification<br><br>' + err.message];
 	}
 	try {
