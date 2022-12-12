@@ -2,7 +2,7 @@ FABricate new text from input source text.
 
 Command-line utility to transpile input source text and apply fabrication rules to generate new text.
 
-![[fab.png]]
+![fab](doc/fab.png)
 
 # Exit Code
 Exit code 0 on success. `stdout` contains new text.
