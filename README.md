@@ -4,8 +4,6 @@ Command-line utility to transpile input source text and apply fabrication rules 
 
 ![[fab.png]]
 
-See doc/documentation.
-
 # Exit Code
 Exit code 0 on success. `stdout` contains new text.
 
@@ -23,6 +21,9 @@ $ fab - grammarName grammarFilename fmtFilename <srcText
 # Build
 make install
 make
+
+# Further Detail
+See doc/documentation.
 
 # Test
 see other repos `fabghoststars`, `parsingexplorer`, `fabx`
