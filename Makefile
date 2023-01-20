@@ -6,7 +6,7 @@ fab: fab-head.js fab-tail.js repos
 
 install: repos npmstuff
 
-repos: ../fmt-js/transpile.js ../fmt-js/fmt-js.js
+repos:
 	multigit -r
 
 npmstuff:
