@@ -13,7 +13,7 @@ function main () {
     var grammar = fs.readFileSync (grammarfilename, 'utf-8');
     var fmt = fs.readFileSync (fmtfilename, 'utf-8');
     var support = argv._[3];
-    var r = transpile (src, grammarName, grammar, fmt, ohm, compilefmt, argv.support);
+    var r = transpile (src, grammar, fmt, ohm, compilefmt, argv.support);
     var success = r [0]
     var transpiled = r [1]
     var errormessage = r [2]

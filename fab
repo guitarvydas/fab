@@ -57,13 +57,6 @@ function getFmtGrammar () {
 
 /// end helpers
 
-function vcompilefmt (v) {
-    // v is { tracing: boolean, traceDepth: int, src: String, grammarName: undefined, grammars: undefined, fmt : undefined, ohm: function, compilefmt: undefined}
-    tracing = v.tracing;
-    traceDepth = v.traceDepth;
-    return compilefmt (v.src, v.ohm);
-}
-
 function compilefmt (fmtsrc, ohmlang) {
     // expand the string fmtsrc into JavaScript suitable for
     // inclusion as a semantic object for Ohm.js
@@ -514,7 +507,7 @@ function main () {
     var grammar = fs.readFileSync (grammarfilename, 'utf-8');
     var fmt = fs.readFileSync (fmtfilename, 'utf-8');
     var support = argv._[3];
-    var r = transpile (src, grammarName, grammar, fmt, ohm, compilefmt, argv.support);
+    var r = transpile (src, grammar, fmt, ohm, compilefmt, argv.support);
     var success = r [0]
     var transpiled = r [1]
     var errormessage = r [2]
