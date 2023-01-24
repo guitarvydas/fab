@@ -427,7 +427,7 @@ function patternmatch (src, grammar, ohmlang) {
     } catch (err) {
     }
     if (pmgrammar === undefined) {
-	return [false, undefined, undefined, `grammar not found [1]`];
+	return [false, undefined, undefined, `grammar not found`];
     }
 
     try {
