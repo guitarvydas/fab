@@ -97,7 +97,9 @@ const fmtGrammar =
 FMT {
 top = spaces name spaces "{" spaces rule+ spaces "}" spaces more*
 more = name spaces "{" spaces rule* spaces "}" spaces
-rule = applySyntactic<RuleLHS> spaces "=" spaces rewriteString
+rule = 
+  | applySyntactic<RuleLHS> spaces "=" spaces rewriteString "$" spaces rewriteString -- downup
+  | applySyntactic<RuleLHS> spaces "=" spaces rewriteString -- up
 RuleLHS = name "[" Param* "]"
 rewriteString = "‛" char* "’" spaces
 char =
@@ -191,14 +193,10 @@ ${rule}
 
     ////
     
-    // rule [lhs ws1 keq ws2 rws] = [[${lhs}${rws}
-    // _ruleExit ("${getRuleName ()}");
-    // },
-    // ]]
 
 
-    rule : function (_lhs,_ws1,_keq,_ws2,_rws) { 
-        _ruleEnter ("rule");
+    rule_up : function (_lhs,_ws1,_keq,_ws2,_rws) { 
+        _ruleEnter ("rule_up");
 
         var lhs = _lhs._fmt ();
         var ws1 = _ws1._fmt ();
@@ -210,7 +208,26 @@ _ruleExit ("${getRuleName ()}");
 return ${rws}
 },
 `; 
-        _ruleExit ("rule");
+        _ruleExit ("rule_up");
+        return _result; 
+    },
+    rule_downup : function (_lhs,_ws1,_keq,_ws2,_drws,_kdollar,_ws3,_rws) { 
+        _ruleEnter ("rule_downup");
+
+        var lhs = _lhs._fmt ();
+        var ws1 = _ws1._fmt ();
+        var keq = _keq._fmt ();
+        var ws2 = _ws2._fmt ();
+	var drws = _drws.fmt ();
+        var kdollar = _kdollar._fmt ();
+        var ws3 = _ws3._fmt ();
+        var rws = _rws._fmt ();
+        var _result = `${lhs}
+_ruleExit ("${getRuleName ()}");
+return ${rws}
+},
+`; 
+        _ruleExit ("rule_downup");
         return _result; 
     },
     ////
