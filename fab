@@ -9,8 +9,8 @@
 
 const fs = require ('fs');
 const ohm = require ('ohm-js');
-// ... require ('./fmt-js/fmt-js.js');
-// ... require ('./fmt-js/transpile.js');
+// ... require ('./fab-js/fab-js.js');
+// ... require ('./fab-js/transpile.js');
 // helpers
 function _ruleInit () {
 }
@@ -46,8 +46,8 @@ function _ruleExit (ruleName) {
     }
 }
 
-function getFmtGrammar () {
-    return fmtGrammar;
+function getFabGrammar () {
+    return fabGrammar;
 }
 
   // helper functions
@@ -57,8 +57,8 @@ function getFmtGrammar () {
 
 /// end helpers
 
-function compilefmt (fmtsrc, ohmlang) {
-    // expand the string fmtsrc into JavaScript suitable for
+function compilefab (fabsrc, ohmlang) {
+    // expand the string fabsrc into JavaScript suitable for
     // inclusion as a semantic object for Ohm.js
     //
     var s = '';
@@ -66,24 +66,24 @@ function compilefmt (fmtsrc, ohmlang) {
     var generatedObject = {};
     
 
-    // Step 1a. Create (internal) fmt transpiler. 
-    var internalgrammar = ohmlang.grammar (fmtGrammar);
-    var fmtcst = internalgrammar.match (fmtsrc);
+    // Step 1a. Create (internal) fab transpiler. 
+    var internalgrammar = ohmlang.grammar (fabGrammar);
+    var fabcst = internalgrammar.match (fabsrc);
 
-    if (fmtcst.failed ()) {
-	let len = fmtcst.getRightmostFailurePosition();
+    if (fabcst.failed ()) {
+	let len = fabcst.getRightmostFailurePosition();
         let emsg = "FORMAT: syntax error in fabrication specification\nrightmostPosition=" + len + '\n';
         return [false, emsg];
     }
-    // Step 1b. Transpile User's FMT spec to a JS object (for use with Ohm-JS)
+    // Step 1b. Transpile User's FAB spec to a JS object (for use with Ohm-JS)
     try {
         var sem = internalgrammar.createSemantics ();
-        sem.addOperation ('_fmt', semObject);
-        var generatedFmtWalker = sem (fmtcst);
-        var generated = generatedFmtWalker._fmt ();
+        sem.addOperation ('_fab', semObject);
+        var generatedFabWalker = sem (fabcst);
+        var generated = generatedFabWalker._fab ();
         return [true, generated];
     } catch (err) {
-        var msg = "error generating code from FMT specification<br><br>" + err.message;
+        var msg = "error generating code from FAB specification<br><br>" + err.message;
         return [false, msg];
     }
 }
@@ -92,9 +92,9 @@ function compilefmt (fmtsrc, ohmlang) {
 var tracing = false;
 var traceDepth = 0;
 
-const fmtGrammar =
+const fabGrammar =
       String.raw`
-FMT {
+FAB {
 top = spaces name spaces "{" spaces rule+ spaces "}" spaces more*
 more = name spaces "{" spaces rule* spaces "}" spaces
 rule = 
@@ -139,7 +139,7 @@ var varNameStack = [];
 // top [ws1 name ws2 lb ws4 @rule ws5 rb ws3 @more] = [[{
 // ${rule}
     // _terminal: function () { return this.sourceString; },
-    // _iter: function (...children) { return children.map(c => c._fmt ()); },
+    // _iter: function (...children) { return children.map(c => c._fab ()); },
     // spaces: function (x) { return this.sourceString; },
     // space: function (x) { return this.sourceString; }
 // }
@@ -150,20 +150,20 @@ const semObject = {
     top : function (_ws1,_name,_ws2,_lb,_ws4,_rule,_ws5,_rb,_ws3,_more) { 
         _ruleEnter ("top");
 
-        var ws1 = _ws1._fmt ();
-        var name = _name._fmt ();
-        var ws2 = _ws2._fmt ();
-        var lb = _lb._fmt ();
-        var ws4 = _ws4._fmt ();
-        var rule = _rule._fmt ().join ('');
-        var ws5 = _ws5._fmt ();
-        var rb = _rb._fmt ();
-        var ws3 = _ws3._fmt ();
-        var more = _more._fmt ().join ('');
+        var ws1 = _ws1._fab ();
+        var name = _name._fab ();
+        var ws2 = _ws2._fab ();
+        var lb = _lb._fab ();
+        var ws4 = _ws4._fab ();
+        var rule = _rule._fab ().join ('');
+        var ws5 = _ws5._fab ();
+        var rb = _rb._fab ();
+        var ws3 = _ws3._fab ();
+        var more = _more._fab ().join ('');
         var _result = `{
 ${rule}${more}
     _terminal: function () { return this.sourceString; },
-    _iter: function (...children) { return children.map(c => c._fmt ()); },
+    _iter: function (...children) { return children.map(c => c._fab ()); },
     spaces: function (x) { return this.sourceString; },
     space: function (x) { return this.sourceString; }
 }
@@ -175,14 +175,14 @@ ${rule}${more}
     more : function (_name,_ws2,_lb,_ws4,_rule,_ws5,_rb,_ws3) { 
         _ruleEnter ("top");
 
-        var name = _name._fmt ();
-        var ws2 = _ws2._fmt ();
-        var lb = _lb._fmt ();
-        var ws4 = _ws4._fmt ();
-        var rule = _rule._fmt ().join ('');
-        var ws5 = _ws5._fmt ();
-        var rb = _rb._fmt ();
-        var ws3 = _ws3._fmt ();
+        var name = _name._fab ();
+        var ws2 = _ws2._fab ();
+        var lb = _lb._fab ();
+        var ws4 = _ws4._fab ();
+        var rule = _rule._fab ().join ('');
+        var ws5 = _ws5._fab ();
+        var rb = _rb._fab ();
+        var ws3 = _ws3._fab ();
         var _result = `
 ${rule}
 `; 
@@ -198,11 +198,11 @@ ${rule}
     rule_up : function (_lhs,_ws1,_keq,_ws2,_rws) { 
         _ruleEnter ("rule_up");
 
-        var lhs = _lhs._fmt ();
-        var ws1 = _ws1._fmt ();
-        var keq = _keq._fmt ();
-        var ws2 = _ws2._fmt ();
-        var rws = _rws._fmt ();
+        var lhs = _lhs._fab ();
+        var ws1 = _ws1._fab ();
+        var keq = _keq._fab ();
+        var ws2 = _ws2._fab ();
+        var rws = _rws._fab ();
         var _result = `${lhs}
 _ruleExit ("${getRuleName ()}");
 return ${rws}
@@ -214,14 +214,14 @@ return ${rws}
     rule_downup : function (_lhs,_ws1,_keq,_ws2,_drws,_kdollar,_ws3,_rws) { 
         _ruleEnter ("rule_downup");
 
-        var lhs = _lhs._fmt ();
-        var ws1 = _ws1._fmt ();
-        var keq = _keq._fmt ();
-        var ws2 = _ws2._fmt ();
-	var drws = _drws.fmt ();
-        var kdollar = _kdollar._fmt ();
-        var ws3 = _ws3._fmt ();
-        var rws = _rws._fmt ();
+        var lhs = _lhs._fab ();
+        var ws1 = _ws1._fab ();
+        var keq = _keq._fab ();
+        var ws2 = _ws2._fab ();
+	var drws = _drws.fab ();
+        var kdollar = _kdollar._fab ();
+        var ws3 = _ws3._fab ();
+        var rws = _rws._fab ();
         var _result = `${lhs}
 _ruleExit ("${getRuleName ()}");
 return ${rws}
@@ -237,10 +237,10 @@ return ${rws}
     RuleLHS : function (_name,_lb,_Params,_rb) { 
         _ruleEnter ("RuleLHS");
 
-        var name = _name._fmt ();
-        var lb = _lb._fmt ();
-        var Params = _Params._fmt ().join ('');
-        var rb = _rb._fmt ();
+        var name = _name._fab ();
+        var lb = _lb._fab ();
+        var Params = _Params._fab ().join ('');
+        var rb = _rb._fab ();
         var _result = `${name}: function (${extractFormals(Params)}) {\n_ruleEnter ("${name}");${setRuleName (name)}${Params}
 `; 
         _ruleExit ("RuleLHS");
@@ -254,10 +254,10 @@ return ${rws}
     rewriteString : function (_sb,_cs,_se,_ws) { 
         _ruleEnter ("rewriteString");
 
-        var sb = _sb._fmt ();
-        var cs = _cs._fmt ().join ('');
-        var se = _se._fmt ();
-        var ws = _ws._fmt ();
+        var sb = _sb._fab ();
+        var cs = _cs._fab ().join ('');
+        var se = _se._fab ();
+        var ws = _ws._fab ();
         var _result = `\`${cs}\`;`; 
         _ruleExit ("rewriteString");
         return _result; 
@@ -270,9 +270,9 @@ return ${rws}
     char_eval : function (_lb,_cs,_rb) { 
         _ruleEnter ("char_eval");
 
-        var lb = _lb._fmt ();
-        var name = _cs._fmt ().join ('');
-        var rb = _rb._fmt ();
+        var lb = _lb._fab ();
+        var name = _cs._fab ().join ('');
+        var rb = _rb._fab ();
         var _result = `\$\{${name}\}`; 
         _ruleExit ("char_eval");
         return _result; 
@@ -281,8 +281,8 @@ return ${rws}
     char_newline : function (_slash, _c) { 
         _ruleEnter ("char_newline");
 
-        var slash = _slash._fmt ();
-        var c = _c._fmt ();
+        var slash = _slash._fab ();
+        var c = _c._fab ();
         var _result = `\n`; 
         _ruleExit ("char_newline");
         return _result; 
@@ -290,8 +290,8 @@ return ${rws}
     char_esc : function (_slash, _c) { 
         _ruleEnter ("char_esc");
 
-        var slash = _slash._fmt ();
-        var c = _c._fmt ();
+        var slash = _slash._fab ();
+        var c = _c._fab ();
         var _result = `${c}`; 
         _ruleExit ("char_esc");
         return _result; 
@@ -299,7 +299,7 @@ return ${rws}
     char_raw : function (_c) { 
         _ruleEnter ("char_raw");
 
-        var c = _c._fmt ();
+        var c = _c._fab ();
         var _result = `${c}`; 
         _ruleExit ("char_raw");
         return _result; 
@@ -312,8 +312,8 @@ return ${rws}
     name : function (_c,_cs) { 
         _ruleEnter ("name");
 
-        var c = _c._fmt ();
-        var cs = _cs._fmt ().join ('');
+        var c = _c._fab ();
+        var cs = _cs._fab ().join ('');
         var _result = `${c}${cs}`; 
         _ruleExit ("name");
         return _result; 
@@ -322,7 +322,7 @@ return ${rws}
     nameFirst : function (_c) { 
         _ruleEnter ("nameFirst");
 
-        var c = _c._fmt ();
+        var c = _c._fab ();
         var _result = `${c}`; 
         _ruleExit ("nameFirst");
         return _result; 
@@ -331,7 +331,7 @@ return ${rws}
     nameRest : function (_c) { 
         _ruleEnter ("nameRest");
 
-        var c = _c._fmt ();
+        var c = _c._fab ();
         var _result = `${c}`; 
         _ruleExit ("nameRest");
         return _result; 
@@ -340,18 +340,18 @@ return ${rws}
     ////
 
 
-    // Param_plus [name k] = [[\nvar ${name} = _${name}._fmt ().join ('');]]
-    // Param_star [name k] = [[\nvar ${name} = _${name}._fmt ().join ('');]]
-    // Param_opt [name k] = [[\nvar ${name} = _${name}._fmt ().join ('');]]
-    // Param_flat [name] = [[\nvar ${name} = _${name}._fmt ();]]
+    // Param_plus [name k] = [[\nvar ${name} = _${name}._fab ().join ('');]]
+    // Param_star [name k] = [[\nvar ${name} = _${name}._fab ().join ('');]]
+    // Param_opt [name k] = [[\nvar ${name} = _${name}._fab ().join ('');]]
+    // Param_flat [name] = [[\nvar ${name} = _${name}._fab ();]]
 
 
     Param_plus : function (_name,_k) { 
         _ruleEnter ("Param_plus");
 
-        var name = _name._fmt ();
-        var k = _k._fmt ();
-        var _result = `\nvar ${name} = _${name}._fmt ().join ('');`; 
+        var name = _name._fab ();
+        var k = _k._fab ();
+        var _result = `\nvar ${name} = _${name}._fab ().join ('');`; 
         _ruleExit ("Param_plus");
         return _result; 
     },
@@ -359,9 +359,9 @@ return ${rws}
     Param_star : function (_name,_k) { 
         _ruleEnter ("Param_star");
 
-        var name = _name._fmt ();
-        var k = _k._fmt ();
-        var _result = `\nvar ${name} = _${name}._fmt ().join ('');`; 
+        var name = _name._fab ();
+        var k = _k._fab ();
+        var _result = `\nvar ${name} = _${name}._fab ().join ('');`; 
         _ruleExit ("Param_star");
         return _result; 
     },
@@ -369,9 +369,9 @@ return ${rws}
     Param_opt : function (_name,_k) { 
         _ruleEnter ("Param_opt");
 
-        var name = _name._fmt ();
-        var k = _k._fmt ();
-        var _result = `\nvar ${name} = _${name}._fmt ().join ('');`; 
+        var name = _name._fab ();
+        var k = _k._fab ();
+        var _result = `\nvar ${name} = _${name}._fab ().join ('');`; 
         _ruleExit ("Param_opt");
         return _result; 
     },
@@ -379,8 +379,8 @@ return ${rws}
     Param_flat : function (_name) { 
         _ruleEnter ("Param_flat");
 
-        var name = _name._fmt ();
-        var _result = `\nvar ${name} = _${name}._fmt ();`; 
+        var name = _name._fab ();
+        var _result = `\nvar ${name} = _${name}._fab ();`; 
         _ruleExit ("Param_flat");
         return _result; 
     },
@@ -388,21 +388,21 @@ return ${rws}
     ////
 
     _terminal: function () { return this.sourceString; },
-    _iter: function (...children) { return children.map(c => c._fmt ()); },
+    _iter: function (...children) { return children.map(c => c._fab ()); },
     spaces: function (x) { return this.sourceString; },
     space: function (x) { return this.sourceString; }
 };
 // yyy
 
-function transpile (src, grammar, fmt, ohmlang, compfmt, supportfname) {
+function transpile (src, grammar, fab, ohmlang, compfab, supportfname) {
     
     [matchsuccess, trgrammar, cst, errormessage] = patternmatch (src, grammar, ohmlang);
     if (!matchsuccess) {
 	return [false, "", "pattern matching error<br><br>" + errormessage];
-    } else if (fmt === undefined || fmt === '') {
+    } else if (fab === undefined || fab === '') {
 	return [false, "", "pattern matching succeeded (but without fabrication)<br><br>" + errormessage];
     } else {
-	[success, semanticsFunctionsAsString] = compfmt (fmt, ohmlang);
+	[success, semanticsFunctionsAsString] = compfab (fab, ohmlang);
 	if (!success) {
 	    var errorMessage = semanticsFunctionsAsString
 	    return [false, null, errorMessage];
@@ -413,22 +413,22 @@ function transpile (src, grammar, fmt, ohmlang, compfmt, supportfname) {
 	    semobj = eval (evalableSemanticsFunctions);
 	} catch (err) {
 	    //console.error (evalableSemanticsFunctions);
-	    //console.error (fmt);
+	    //console.error (fab);
 	    return [false, null, 'error evaling .fab specification<br><br>' + err.message];
 	}
 	try {
-	    sem.addOperation ("_fmt", semobj);
+	    sem.addOperation ("_fab", semobj);
 	} catch (err) {
 	    return [false, null, "error in .fab specification<br><br>" + err.message];
 	}
-        var generatedFmtWalker = sem (cst);
+        var generatedFabWalker = sem (cst);
         try {
 	    //tracing = true;
             if (supportfname) {
 		var support = fs.readFileSync (supportfname, 'UTF-8');
 		eval (support);
 	    }
-	    var generated = generatedFmtWalker._fmt ();
+	    var generated = generatedFabWalker._fab ();
 	} catch (err) {
 	    return [false, "", err.message];
 	}
@@ -498,8 +498,8 @@ function _ruleExit (ruleName) {
     }
 }
 
-function getFmtGrammar () {
-    return fmtGrammar;
+function getFabGrammar () {
+    return fabGrammar;
 }
 
   // helper functions
@@ -519,12 +519,12 @@ function main () {
     traceDepth = 0;
     srcfilename = '/dev/fd/0';
     var grammarfilename = argv._[0];
-    var fmtfilename = argv._[1];
+    var fabfilename = argv._[1];
     var src = fs.readFileSync (srcfilename, 'utf-8');
     var grammar = fs.readFileSync (grammarfilename, 'utf-8');
-    var fmt = fs.readFileSync (fmtfilename, 'utf-8');
+    var fab = fs.readFileSync (fabfilename, 'utf-8');
     var support = argv._[2];
-    var r = transpile (src, grammar, fmt, ohm, compilefmt, support);
+    var r = transpile (src, grammar, fab, ohm, compilefab, support);
     var success = r [0]
     var transpiled = r [1]
     var errormessage = r [2]
