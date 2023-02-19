@@ -1,5 +1,0 @@
-# Don't forget including your subrepos' roots to .gitignore!
-subrepos:
-- path: 'fmt-js'
-  repo: 'git@github.com:guitarvydas/fmt-js.git'
-  branch: 'singlegrammar'
