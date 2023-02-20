@@ -97,9 +97,7 @@ const fabGrammar =
 FAB {
 top = spaces name spaces "{" spaces rule+ spaces "}" spaces more*
 more = name spaces "{" spaces rule* spaces "}" spaces
-rule = 
-  | applySyntactic<RuleLHS> spaces "=" spaces downString "$" spaces rewriteString -- downup
-  | applySyntactic<RuleLHS> spaces "=" spaces rewriteString -- up
+rule = applySyntactic<RuleLHS> spaces "=" spaces rewriteString -- up
 RuleLHS = name "[" Param* "]"
 rewriteString = "‛" char* "’" spaces
 downString = "‛" char* "’"
@@ -210,25 +208,6 @@ return ${rws}
 },
 `; 
         _ruleExit ("rule_up");
-        return _result; 
-    },
-    rule_downup : function (_lhs,_ws1,_keq,_ws2,_drws,_kdollar,_ws3,_rws) { 
-        _ruleEnter ("rule_downup");
-
-        var lhs = _lhs._fab ();
-        var ws1 = _ws1._fab ();
-        var keq = _keq._fab ();
-        var ws2 = _ws2._fab ();
-	var drws = _drws.fab ();
-        var kdollar = _kdollar._fab ();
-        var ws3 = _ws3._fab ();
-        var rws = _rws._fab ();
-        var _result = `${lhs}
-_ruleExit ("${getRuleName ()}");
-return ${rws}
-},
-`; 
-        _ruleExit ("rule_downup");
         return _result; 
     },
     ////
