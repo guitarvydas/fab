@@ -128,17 +128,7 @@ function extractFormals (s) {
         .replace (/[A-Za-z0-9_]+ = /g,'')
         .replace (/\._[^;]+;/g,'')
         .replace (/,/,'')
-    ;
-    return s0;
-}
-
-function extractLocals (s) {
-    var s0 = s
-        .replace (/\n/g,',')
-        .replace (/[A-Za-z0-9_]+ = /g,'')
-        .replace (/\._[^;]+;/g,'')
-        .replace (/,/,'')
-        .replace (/_/,'')
+	.replace (/_/g,'')
     ;
     return s0;
 }
@@ -234,8 +224,9 @@ return ${rws}
         var lb = _lb._fab ();
         var Params = _Params._fab ().join ('');
         var rb = _rb._fab ();
-        var _result = `${name}: function (${extractFormals(Params)}) {\n_ruleEnter ("${name}");${setRuleName (name)}\nvar ${extractLocals(Params)};\n${Params}
+        var _result = `${name}: function (${extractFormals(Params)}) {\n_ruleEnter ("${name}");${setRuleName (name)}${Params}
 `; 
+	console.log (_result);
         _ruleExit ("RuleLHS_nodown");
         return _result; 
     },
@@ -369,7 +360,7 @@ return ${rws}
 
         var name = _name._fab ();
         var k = _k._fab ();
-        var _result = `\n${name} = _${name}._fab ().join ('');`; 
+        var _result = `\n${name} = ${name}._fab ().join ('');`; 
         _ruleExit ("Param_plus");
         return _result; 
     },
@@ -379,7 +370,7 @@ return ${rws}
 
         var name = _name._fab ();
         var k = _k._fab ();
-        var _result = `\n${name} = _${name}._fab ().join ('');`; 
+        var _result = `\n${name} = ${name}._fab ().join ('');`; 
         _ruleExit ("Param_star");
         return _result; 
     },
@@ -389,7 +380,7 @@ return ${rws}
 
         var name = _name._fab ();
         var k = _k._fab ();
-        var _result = `\n${name} = _${name}._fab ().join ('');`; 
+        var _result = `\n${name} = ${name}._fab ().join ('');`; 
         _ruleExit ("Param_opt");
         return _result; 
     },
@@ -398,7 +389,7 @@ return ${rws}
         _ruleEnter ("Param_flat");
 
         var name = _name._fab ();
-        var _result = `\n${name} = _${name}._fab ();`; 
+        var _result = `\n${name} = ${name}._fab ();`; 
         _ruleExit ("Param_flat");
         return _result; 
     },
