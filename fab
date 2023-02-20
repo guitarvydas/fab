@@ -98,10 +98,11 @@ FAB {
 top = spaces name spaces "{" spaces rule+ spaces "}" spaces more*
 more = name spaces "{" spaces rule* spaces "}" spaces
 rule = 
-  | applySyntactic<RuleLHS> spaces "=" spaces rewriteString "$" spaces rewriteString -- downup
+  | applySyntactic<RuleLHS> spaces "=" spaces downString "$" spaces rewriteString -- downup
   | applySyntactic<RuleLHS> spaces "=" spaces rewriteString -- up
 RuleLHS = name "[" Param* "]"
 rewriteString = "‛" char* "’" spaces
+downString = "‛" char* "’"
 char =
   | "«" nonBracketChar* "»" -- eval
   | "\\" "n" -- newline
@@ -260,6 +261,17 @@ return ${rws}
         var ws = _ws._fab ();
         var _result = `\`${cs}\`;`; 
         _ruleExit ("rewriteString");
+        return _result; 
+    },
+
+    downString : function (_sb,_cs,_se) { 
+        _ruleEnter ("downString");
+
+        var sb = _sb._fab ();
+        var cs = _cs._fab ().join ('');
+        var se = _se._fab ();
+        var _result = `\`${cs}\`;`; 
+        _ruleExit ("downString");
         return _result; 
     },
 
