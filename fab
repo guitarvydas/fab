@@ -98,7 +98,9 @@ FAB {
 top = spaces name spaces "{" spaces rule+ spaces "}" spaces more*
 more = name spaces "{" spaces rule* spaces "}" spaces
 rule = applySyntactic<RuleLHS> spaces "=" spaces rewriteString -- up
-RuleLHS = name "[" Param* "]"
+RuleLHS = 
+  | name "[" Param* "]" spaces downString spaces -- down
+  | name "[" Param* "]" -- nodown
 rewriteString = "‛" char* "’" spaces
 downString = "‛" char* "’"
 char =
@@ -214,8 +216,8 @@ return ${rws}
     
     // RuleLHS [name lb @Params rb] = [[${name}: function (${extractFormals(Params)}) {\n_ruleEnter ("${name}");${setRuleName (name)}${Params}
     // ]]
-    RuleLHS : function (_name,_lb,_Params,_rb) { 
-        _ruleEnter ("RuleLHS");
+    RuleLHS_nodown : function (_name,_lb,_Params,_rb) { 
+        _ruleEnter ("RuleLHS_nodown");
 
         var name = _name._fab ();
         var lb = _lb._fab ();
@@ -223,7 +225,20 @@ return ${rws}
         var rb = _rb._fab ();
         var _result = `${name}: function (${extractFormals(Params)}) {\n_ruleEnter ("${name}");${setRuleName (name)}${Params}
 `; 
-        _ruleExit ("RuleLHS");
+        _ruleExit ("RuleLHS_nodown");
+        return _result; 
+    },
+    
+    RuleLHS_down : function (_name,_lb,_Params,_rb, _ws1, _downstring, _ws2) { 
+        _ruleEnter ("RuleLHS_down");
+
+        var name = _name._fab ();
+        var lb = _lb._fab ();
+        var Params = _Params._fab ().join ('');
+        var rb = _rb._fab ();
+        var _result = `${name}: function (${extractFormals(Params)}) {\n_ruleEnter ("${name}");${setRuleName (name)}${Params}
+`; 
+        _ruleExit ("RuleLHS_down");
         return _result; 
     },
     
