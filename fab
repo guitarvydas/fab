@@ -226,7 +226,6 @@ return ${rws}
         var rb = _rb._fab ();
         var _result = `${name}: function (${extractFormals(Params)}) {\n_ruleEnter ("${name}");${setRuleName (name)}${Params}
 `; 
-	console.log (_result);
         _ruleExit ("RuleLHS_nodown");
         return _result; 
     },
@@ -238,9 +237,10 @@ return ${rws}
         var lb = _lb._fab ();
         var Params = _Params._fab ().join ('');
         var rb = _rb._fab ();
-        var downstring = _downstring._fab ();
-        var _result = `${name}: function (${extractFormals(Params)}) {\n_ruleEnter ("${name}");${setRuleName (name)}\nvar ${extractLocals(Params)}\n${Params}
+        var _result = `${name}: function (${extractFormals(Params)}) {\n_ruleEnter ("${name}");${setRuleName (name)}\nvar _0 = ${_downstring._fab ()};\n${Params}
 `; 
+	console.log (_downstring._fab ());
+	console.log (_result);
         _ruleExit ("RuleLHS_down");
         return _result; 
     },
@@ -267,7 +267,7 @@ return ${rws}
         var sb = _sb._fab ();
         var cs = _cs._fab ().join ('');
         var se = _se._fab ();
-        var _result = `\`${cs}\`;`; 
+        var _result = `\`${cs}\``; 
         _ruleExit ("downString");
         return _result; 
     },
