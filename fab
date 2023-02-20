@@ -125,9 +125,20 @@ space += comment
 function extractFormals (s) {
     var s0 = s
         .replace (/\n/g,',')
-        .replace (/var [A-Za-z0-9_]+ = /g,'')
+        .replace (/[A-Za-z0-9_]+ = /g,'')
         .replace (/\._[^;]+;/g,'')
         .replace (/,/,'')
+    ;
+    return s0;
+}
+
+function extractLocals (s) {
+    var s0 = s
+        .replace (/\n/g,',')
+        .replace (/[A-Za-z0-9_]+ = /g,'')
+        .replace (/\._[^;]+;/g,'')
+        .replace (/,/,'')
+        .replace (/_/,'')
     ;
     return s0;
 }
@@ -223,7 +234,7 @@ return ${rws}
         var lb = _lb._fab ();
         var Params = _Params._fab ().join ('');
         var rb = _rb._fab ();
-        var _result = `${name}: function (${extractFormals(Params)}) {\n_ruleEnter ("${name}");${setRuleName (name)}${Params}
+        var _result = `${name}: function (${extractFormals(Params)}) {\n_ruleEnter ("${name}");${setRuleName (name)}\nvar ${extractLocals(Params)};\n${Params}
 `; 
         _ruleExit ("RuleLHS_nodown");
         return _result; 
@@ -236,12 +247,13 @@ return ${rws}
         var lb = _lb._fab ();
         var Params = _Params._fab ().join ('');
         var rb = _rb._fab ();
-        var _result = `${name}: function (${extractFormals(Params)}) {\n_ruleEnter ("${name}");${setRuleName (name)}${Params}
+        var downstring = _downstring._fab ();
+        var _result = `${name}: function (${extractFormals(Params)}) {\n_ruleEnter ("${name}");${setRuleName (name)}\nvar ${extractLocals(Params)}\n${Params}
 `; 
         _ruleExit ("RuleLHS_down");
         return _result; 
     },
-    
+
     ////
 
 
@@ -357,7 +369,7 @@ return ${rws}
 
         var name = _name._fab ();
         var k = _k._fab ();
-        var _result = `\nvar ${name} = _${name}._fab ().join ('');`; 
+        var _result = `\n${name} = _${name}._fab ().join ('');`; 
         _ruleExit ("Param_plus");
         return _result; 
     },
@@ -367,7 +379,7 @@ return ${rws}
 
         var name = _name._fab ();
         var k = _k._fab ();
-        var _result = `\nvar ${name} = _${name}._fab ().join ('');`; 
+        var _result = `\n${name} = _${name}._fab ().join ('');`; 
         _ruleExit ("Param_star");
         return _result; 
     },
@@ -377,7 +389,7 @@ return ${rws}
 
         var name = _name._fab ();
         var k = _k._fab ();
-        var _result = `\nvar ${name} = _${name}._fab ().join ('');`; 
+        var _result = `\n${name} = _${name}._fab ().join ('');`; 
         _ruleExit ("Param_opt");
         return _result; 
     },
@@ -386,7 +398,7 @@ return ${rws}
         _ruleEnter ("Param_flat");
 
         var name = _name._fab ();
-        var _result = `\nvar ${name} = _${name}._fab ();`; 
+        var _result = `\n${name} = _${name}._fab ();`; 
         _ruleExit ("Param_flat");
         return _result; 
     },
