@@ -239,8 +239,6 @@ return ${rws}
         var rb = _rb._fab ();
         var _result = `${name}: function (${extractFormals(Params)}) {\n_ruleEnter ("${name}");${setRuleName (name)}\nvar _0 = ${_downstring._fab ()};\n${Params}
 `; 
-	console.log (_downstring._fab ());
-	console.log (_result);
         _ruleExit ("RuleLHS_down");
         return _result; 
     },
