@@ -402,12 +402,22 @@ return ${rws}
 // yyy
 
 function transpile (src, grammar, fab, ohmlang, compfab, supportfname) {
-    
+
     [matchsuccess, trgrammar, cst, errormessage] = patternmatch (src, grammar, ohmlang);
     if (!matchsuccess) {
-	return [false, "", "pattern matching error<br><br>" + errormessage];
+	var grammarname = '';
+	try {
+	    grammarname = grammar.split ('\n')[0];
+	} catch (err) {
+	}
+	return [false, "", `pattern matching error<br><br> in /${grammarname}/: ` + errormessage];
     } else if (fab === undefined || fab === '') {
-	return [false, "", "pattern matching succeeded (but without fabrication)<br><br>" + errormessage];
+	var grammarname = '';
+	try {
+	    grammarname = grammar.split ('\n')[0];
+	} catch (err) {
+	}
+	return [false, "", `pattern matching succeeded in /${grammarname}/ (but without fabrication):<br><br>` + errormessage];
     } else {
 	[success, semanticsFunctionsAsString] = compfab (fab, ohmlang);
 	if (!success) {
@@ -421,12 +431,22 @@ function transpile (src, grammar, fab, ohmlang, compfab, supportfname) {
 	} catch (err) {
 	    //console.error (evalableSemanticsFunctions);
 	    //console.error (fab);
-	    return [false, null, 'error evaling .fab specification<br><br>' + err.message];
+	    var grammarname = '';
+	    try {
+		grammarname = fab.split ('\n')[0];
+	    } catch (err) {
+	    }
+	    return [false, null, `error evaling .fab specification in /${grammarname}/<br><br>` + err.message];
 	}
 	try {
 	    sem.addOperation ("_fab", semobj);
 	} catch (err) {
-	    return [false, null, "error in .fab specification<br><br>" + err.message];
+	    var grammarname = '';
+	    try {
+		grammarname = fab.split ('\n')[0];
+	    } catch (err) {
+	    }
+	    return [false, null, `error in .fab specification /${grammarname}/ <br><br>: ` + err.message];
 	}
         var generatedFabWalker = sem (cst);
         try {
@@ -437,7 +457,12 @@ function transpile (src, grammar, fab, ohmlang, compfab, supportfname) {
 	    }
 	    var generated = generatedFabWalker._fab ();
 	} catch (err) {
-	    return [false, "", err.message];
+	    var grammarname = '';
+	    try {
+		grammarname = grammar.split ('\n')[0];
+	    } catch (err) {
+	    }
+	    return [false, '', `in /${grammarname}/: ` +  err.message];
 	}
 	return [true, generated, ""];
     }
@@ -539,12 +564,18 @@ function main () {
 	emit (transpiled);
 	process.exit (0);
     } else {
-	emit (errormessage);
+	erremit (errormessage);
 	process.exit (1);
     }
 }
 function emit (s) {
     console.log (s);
+}
+
+function erremit (s) {
+    console.error ();
+    console.error (s);
+    console.error ();
 }
 
 main ();
