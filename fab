@@ -471,12 +471,14 @@ function transpile (src, grammar, fab, ohmlang, compfab, supportfname) {
 
 function patternmatch (src, grammar, ohmlang) {
     var pmgrammar = undefined;
+    var emessage = '';
     try {
 	pmgrammar = ohmlang.grammar (grammar);
     } catch (err) {
+	emessage = err.message;
     }
     if (pmgrammar === undefined) {
-	return [false, undefined, undefined, `grammar not found`];
+	return [false, undefined, undefined, `\nerror in grammar ${emessage}`];
     }
 
     try {
