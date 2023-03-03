@@ -459,10 +459,10 @@ function transpile (src, grammar, fab, ohmlang, compfab, supportfname) {
 	} catch (err) {
 	    var grammarname = '';
 	    try {
-		grammarname = grammar.split ('\n')[0];
+		grammarname = fab.split ('\n')[0];
 	    } catch (err) {
 	    }
-	    return [false, '', `in /${grammarname}/: ` +  err.message];
+	    return [false, '', `tree walking in /${grammarname}/: ` +  err.message];
 	}
 	return [true, generated, ""];
     }
