@@ -401,27 +401,20 @@ return ${rws}
 };
 // yyy
 
-function fetchGrammarName (grammar) {
-    // return the name of the grammar (first ident in the string grammar)
-    // this is a stupid implementation that could be improved ; this returns the first line, instead of parsing out the first ident
-    grammarname = grammar.split ('\n')[0];
-    return grammarname;
-}
-
 function transpile (src, grammar, fab, ohmlang, compfab, supportfname) {
 
     [matchsuccess, trgrammar, cst, errormessage] = patternmatch (src, grammar, ohmlang);
     if (!matchsuccess) {
 	var grammarname = '';
 	try {
-	    grammarname = fetchGrammarName (grammar);
+	    grammarname = grammar.split ('\n')[0];
 	} catch (err) {
 	}
 	return [false, "", `pattern matching error<br><br> in /${grammarname}/: ` + errormessage];
     } else if (fab === undefined || fab === '') {
 	var grammarname = '';
 	try {
-	    grammarname = fetchGrammarName (grammar);
+	    grammarname = grammar.split ('\n')[0];
 	} catch (err) {
 	}
 	return [false, "", `pattern matching succeeded in /${grammarname}/ (but without fabrication):<br><br>` + errormessage];
@@ -440,7 +433,7 @@ function transpile (src, grammar, fab, ohmlang, compfab, supportfname) {
 	    //console.error (fab);
 	    var grammarname = '';
 	    try {
-		grammarname = fetchGrammarName (fab);
+		grammarname = fab.split ('\n')[0];
 	    } catch (err) {
 	    }
 	    return [false, null, `error evaling .fab specification in /${grammarname}/<br><br>` + err.message];
@@ -450,7 +443,7 @@ function transpile (src, grammar, fab, ohmlang, compfab, supportfname) {
 	} catch (err) {
 	    var grammarname = '';
 	    try {
-		grammarname = fetchGrammarName (fab);
+		grammarname = fab.split ('\n')[0];
 	    } catch (err) {
 	    }
 	    return [false, null, `error in .fab specification /${grammarname}/ <br><br>: ` + err.message];
@@ -466,7 +459,7 @@ function transpile (src, grammar, fab, ohmlang, compfab, supportfname) {
 	} catch (err) {
 	    var grammarname = '';
 	    try {
-		grammarname = fetchGrammarName (fab);
+		grammarname = fab.split ('\n')[0];
 	    } catch (err) {
 	    }
 	    return [false, '', `tree walking in /${grammarname}/: ` +  err.message];
@@ -559,13 +552,14 @@ function main () {
     tracing = false;
     traceDepth = 0;
     srcfilename = '/dev/fd/0';
-    var grammarfilename = argv._[0];
-    var fabfilename = argv._[1];
+    var grammarname = argv._[0];
+    var grammarfilename = argv._[1];
+    var fabfilename = argv._[2];
     var src = fs.readFileSync (srcfilename, 'utf-8');
     var grammar = fs.readFileSync (grammarfilename, 'utf-8');
     var fab = fs.readFileSync (fabfilename, 'utf-8');
-    var support = argv._[2];
-    var r = transpile (src, grammar, fab, ohm, compilefab, support);
+    var support = argv._[3];
+    var r = multi_transpile (src, grammarname, grammar, fab, ohm, compilefab, support);
     var success = r [0]
     var transpiled = r [1]
     var errormessage = r [2]
