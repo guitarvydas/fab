@@ -403,27 +403,27 @@ return ${rws}
 
 function fetchGrammarName (grammar) {
     // return the name of the grammar (first ident in the string grammar)
-    // this is a stupid implementation that could be improved ; this returns the first line, instead of parsing out the first ident
-    grammarname = grammar.split ('\n')[0];
-    return grammarname;
+    // TODO: this can probably be improved 
+    let pattern = /^[ \t]*\w+/m;
+    try {
+	let r = pattern.exec (grammar);
+	return r[0].trim();
+    } catch (err) {
+	return '';
+    }
 }
 
 function transpile (src, grammar, fab, ohmlang, compfab, supportfname) {
+    let grammarname = fetchGrammarName (grammar);
+    return multi_transpile (src, grammarname, grammar, fab, ohmlang, compfab, supportfname);
+}
+
+function multi_transpile (src, grammarname, grammar, fab, ohmlang, compfab, supportfname) {
 
     [matchsuccess, trgrammar, cst, errormessage] = patternmatch (src, grammar, ohmlang);
     if (!matchsuccess) {
-	var grammarname = '';
-	try {
-	    grammarname = fetchGrammarName (grammar);
-	} catch (err) {
-	}
 	return [false, "", `pattern matching error<br><br> in /${grammarname}/: ` + errormessage];
     } else if (fab === undefined || fab === '') {
-	var grammarname = '';
-	try {
-	    grammarname = fetchGrammarName (grammar);
-	} catch (err) {
-	}
 	return [false, "", `pattern matching succeeded in /${grammarname}/ (but without fabrication):<br><br>` + errormessage];
     } else {
 	[success, semanticsFunctionsAsString] = compfab (fab, ohmlang);
@@ -438,22 +438,14 @@ function transpile (src, grammar, fab, ohmlang, compfab, supportfname) {
 	} catch (err) {
 	    //console.error (evalableSemanticsFunctions);
 	    //console.error (fab);
-	    var grammarname = '';
-	    try {
-		grammarname = fetchGrammarName (fab);
-	    } catch (err) {
-	    }
-	    return [false, null, `error evaling .fab specification in /${grammarname}/<br><br>` + err.message];
+	    let fgrammarname = fetchGrammarName (fab);
+	    return [false, null, `error evaling .fab specification in /${fgrammarname}/<br><br>` + err.message];
 	}
 	try {
 	    sem.addOperation ("_fab", semobj);
 	} catch (err) {
-	    var grammarname = '';
-	    try {
-		grammarname = fetchGrammarName (fab);
-	    } catch (err) {
-	    }
-	    return [false, null, `error in .fab specification /${grammarname}/ <br><br>: ` + err.message];
+	    let fgrammarname = fetchGrammarName (fab);
+	    return [false, null, `error in .fab specification /${fgrammarname}/ <br><br>: ` + err.message];
 	}
         var generatedFabWalker = sem (cst);
         try {
@@ -464,12 +456,8 @@ function transpile (src, grammar, fab, ohmlang, compfab, supportfname) {
 	    }
 	    var generated = generatedFabWalker._fab ();
 	} catch (err) {
-	    var grammarname = '';
-	    try {
-		grammarname = fetchGrammarName (fab);
-	    } catch (err) {
-	    }
-	    return [false, '', `tree walking in /${grammarname}/: ` +  err.message];
+	    let fgrammarname = fetchGrammarName (fab);
+	    return [false, '', `tree walking in /${fgrammarname}/: ` +  err.message];
 	}
 	return [true, generated, ""];
     }
