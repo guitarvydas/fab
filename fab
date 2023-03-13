@@ -419,8 +419,7 @@ function transpile (src, grammar, fab, ohmlang, compfab, supportfname) {
 }
 
 function multi_transpile (src, grammarname, grammar, fab, ohmlang, compfab, supportfname) {
-
-    [matchsuccess, trgrammar, cst, errormessage] = patternmatch (src, grammar, ohmlang);
+    [matchsuccess, trgrammar, cst, errormessage] = patternmatch (src, grammarname, grammar, ohmlang);
     if (!matchsuccess) {
 	return [false, "", `pattern matching error<br><br> in /${grammarname}/: ` + errormessage];
     } else if (fab === undefined || fab === '') {
@@ -464,11 +463,13 @@ function multi_transpile (src, grammarname, grammar, fab, ohmlang, compfab, supp
 }
 
 
-function patternmatch (src, grammar, ohmlang) {
+function patternmatch (src, grammarname, grammar, ohmlang) {
+    var pmgrammars = undefined;
     var pmgrammar = undefined;
     var emessage = '';
     try {
-	pmgrammar = ohmlang.grammar (grammar);
+	pmgrammars = ohmlang.grammars (grammar);
+	pmgrammar = pmgrammars [grammarname];
     } catch (err) {
 	emessage = err.message;
     }
